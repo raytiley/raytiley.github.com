@@ -148,6 +148,11 @@ footer {
 
 .posts {
   list-style: none;
+  padding: 0;
+}
+
+.posts li {
+  margin-bottom: 10px;
 }
 
 @media print, screen and (max-width: 960px) {
