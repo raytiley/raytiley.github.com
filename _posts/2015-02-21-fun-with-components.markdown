@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Using the Component helpers"
+title:  "Using the Component Helper"
 date:   2015-02-21 2:25:00 PM
-categories: emberjs components helpers
+categories: emberjs components helper
 ---
 
 It is a week before I head off to EmberConf and I'm sitting in a bar thinking it is about time I start sharing some of the knowledge I steal from the very friendly folks in #emberjs. The past few weeks I've been working on our scheduling interface, porting some ASP.NET webforms to ember. During this process I've run into multiple situations where I need to make a choice about what `component` to render.

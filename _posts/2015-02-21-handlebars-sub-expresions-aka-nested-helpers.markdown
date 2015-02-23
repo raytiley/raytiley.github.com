@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Using Nested Helpers in Ember.js"
+title:  "Using Subexpressions (Nested Helpers) in Ember.js"
 date:   2015-02-21 2:30:00 PM
 categories: emberjs components helpers subexpressions handlebars
 ---
