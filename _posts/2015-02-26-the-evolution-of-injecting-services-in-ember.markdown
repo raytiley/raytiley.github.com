@@ -52,7 +52,7 @@ export default Ember.Route.extend({
 // It is very common to use an alias so you don't have to type controllers a million times
 export default Ember.Controller.extend({
   needs: ['flash-message'],
-  flashManager: Ember.computed.alais('controllers.flash-message'),
+  flashManager: Ember.computed.alias('controllers.flash-message'),
 
   actions: {
     upVote: function() {
@@ -76,7 +76,7 @@ Instead we could **inject** that **dependency**. Everytime you want to log a mes
 {% highlight javascript %}
 // utils/logger.js
 // Just a simple object that does some logging for us
-export default Ember.Object.extned({
+export default Ember.Object.extend({
 
   log(type, message) {
     // Do your sweet thing here
@@ -113,7 +113,7 @@ export default Ember.Controller.extend({
 });
 {% endhighlight %}
 
-There are lots of different knobs that can be dialed in here. For instance the default behavior is we get a sigleton logger, meaning that all the logger properties will be the same accross routes, controllers, and components. We could change this. For more details read the [api docs](http://emberjs.com/api/classes/Ember.Application.html#method_register). So what's wrong with this approach? Nothing in particular, I actually quite like it. There are a few things to be aware of however.
+There are lots of different knobs that can be dialed in here. For instance the default behavior is we get a sigleton logger, meaning that all the logger properties will be the same across routes, controllers, and components. We could change this. For more details read the [api docs](http://emberjs.com/api/classes/Ember.Application.html#method_register). So what's wrong with this approach? Nothing in particular, I actually quite like it. There are a few things to be aware of however.
 
 Notice I didn't need to declare a `logger` property on my `PostsViewRoute`.  The `logger` property is injected onto all my routes whether I like it or not. I find it good practice to declare my injected properties with `null` (`logger: null`). I spent a long time once debugging an injected property conflicting with another property. By declaring it explictly I prevent myself from acciedently using that name for something else.
 
@@ -121,7 +121,7 @@ Another thing about this approach is it can be a bit tedious to limit your injec
 
 ## Meet Ember.inject.service and Ember.inject.controller
 
-What's great about Ember is how it embraces paving cow paths. Pretty much every non trivial Ember application is doing some combination of the above. In my own app I have lots of `needs` (pun intended) and several initalizers injecting services. These patterns are tried, trued, and we know where all the cow shit is. So lets smooth them over using some new APIs. The controller part of our first example becomes:
+What's great about Ember is how it embraces paving cow paths. Pretty much every non trivial Ember application is doing some combination of the above. In my own app I have lots of `needs` (pun intended) and several initializers injecting services. These patterns are tried, trued, and we know where all the cow shit is. So lets smooth them over using some new APIs. The controller part of our first example becomes:
 
 {% highlight javascript %}
 // controllers/posts/view.js
@@ -163,8 +163,8 @@ export default Ember.Controller.extend({
 });
 {% endhighlight %}
 
-Sweet! We got to remove a whole file, the initializer is gone. Notice also that we moved `logger.js` from `utils` to `services`. By placing our services in the `services` folder Ember CLI will find them for us automatically. One less pointless choice. (the choice of `utils` was pointless. I just made that up in my own app.) I also like this better because I'm explicitly delcaring that I wan't the `logger` service available on `PostsViewRoute`. Other routes won't have a `logger` automatically. This also means that I don't have to worry about my injected property conflicting.
+Sweet! We got to remove a whole file, the initializer is gone. Notice also that we moved `logger.js` from `utils` to `services`. By placing our services in the `services` folder Ember CLI will find them for us automatically. One less pointless choice. (the choice of `utils` was pointless. I just made that up in my own app.) I also like this better because I'm explicitly declaring that I wan't the `logger` service available on `PostsViewRoute`. Other routes won't have a `logger` automatically. This also means that I don't have to worry about my injected property conflicting.
 
 Now there are some rules for what can be injected where, but there is no public API for customizing that yet. For the most part you can inject services where you would think, including `routes`, `controllers`, `views`, and `components`. This isn't only for your own services. Addons can expose services and you can inject them into your apps objects. For example Ember Data has an [open PR](https://github.com/emberjs/data/pull/2820) to allow you to expose the `store` as a service.
 
-I'm a big fan of this API. It allowed me to delete a bunch of inializers in our app, and removed some silly choices from my day to day development. I think the Services API shows how Ember can constantly itterate on ideas without making me throw away all my code. Stability without Stagnation&trade;
+I'm a big fan of this API. It allowed me to delete a bunch of initializers in our app, and removed some silly choices from my day to day development. I think the Services API shows how Ember can constantly itterate on ideas without making me throw away all my code. Stability without Stagnation&trade;
