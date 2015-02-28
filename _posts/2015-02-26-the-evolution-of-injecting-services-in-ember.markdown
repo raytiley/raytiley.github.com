@@ -127,7 +127,7 @@ Another thing about this approach is it can be a bit tedious to limit your injec
 
 ## Meet Ember.inject.service and Ember.inject.controller
 
-What's great about Ember is how it embraces paving cow paths. Pretty much every non trivial Ember application is doing some combination of the above. In my own app I have lots of `needs` (pun intended) and several initalizers injecting services. These patterns are tried, trued, and we know where all the cow shit is. So lets smooth them over using some new APIs. The controller part of our first example becomes:
+What's great about Ember is how it embraces paving cow paths. Pretty much every non trivial Ember application is doing some combination of the above. In my own app I have lots of `needs` (pun intended) and several initializers injecting services. These patterns are tried, trued, and we know where all the cow shit is. So lets smooth them over using some new APIs. The controller part of our first example becomes:
 
 {% highlight javascript %}
 // controllers/posts/view.js
@@ -145,12 +145,12 @@ export default Ember.Controller.extend({
 });
 {% endhighlight %}
 
-Granted this doesn't do a whole lot for us, we only got to remove one line of code. Also if we need access to a controller from a route we still need to use `controllerFor`. What I'm realy excited about is `Ember.inject.service()`. Our second example becomes:
+Granted this doesn't do a whole lot for us, we only got to remove one line of code. Also if we need access to a controller from a route we still need to use `controllerFor`. What I'm really excited about is `Ember.inject.service()`. Our second example becomes:
 
 {% highlight javascript %}
 // services/logger.js
 // Just a simple object that does some logging for us
-export default Ember.Object.extned({
+export default Ember.Object.extend({
 
   log(type, message) {
     // Do your sweet thing here
