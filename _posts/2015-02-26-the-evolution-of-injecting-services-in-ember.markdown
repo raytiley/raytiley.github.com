@@ -5,13 +5,13 @@ date:   2015-02-26 10:00:00 PM
 categories: emberjs services inject
 ---
 
-I've been using Ember for about two years now. One of the things that iniitally impressed me is you don't need a lot of boilerplate code. At a bare minimum you need an `Ember.Application.create()` and an application template to get your app running. It won't do anything, but its a perfectly functioning application. The first Ember app I wrote is actually still up on the internet here: [http://raytiley-msse-static-scheduler.herokuapp.com](http://raytiley-msse-static-scheduler.herokuapp.com/#/taskSets).
+I've been using Ember for about two years now. One of the things that initially impressed me is you don't need a lot of boilerplate code. At a bare minimum you need an `Ember.Application.create()` and an application template to get your app running. It won't do anything, but it is a perfectly functioning application. The first Ember app I wrote is still up on the Internet here: [http://raytiley-msse-static-scheduler.herokuapp.com](http://raytiley-msse-static-scheduler.herokuapp.com/#/taskSets).
 
-If you dig deep into the [source code](https://github.com/raytiley/RealTimeScheduler/tree/master/app/assets/javascripts/app) you'll see there are only `Routes`, `Models`, and `Controllers`. Alas, things were simpler back then. The app I develop today has `Mixins`, `Transforms`, `Helpers`, `Views`, `Adapters`, `Serializers`, and I think we just passed fifty `Components`.
+If you dig into the [source code](https://github.com/raytiley/RealTimeScheduler/tree/master/app/assets/javascripts/app) you'll see there are only `Routes`, `Models`, and `Controllers`. Alas, things were simpler back then. The app I develop today has `Mixins`, `Transforms`, `Helpers`, `Views`, `Adapters`, `Serializers`, and I think we just passed fifty `Components`.
 
-If your new to Ember than this might seem like a lot to manage, but actually it is quite the opposite. All these things have meaning to me. They all have their own folder in my app, and just by naming them correctly Ember CLI magically wires them all together into a working application. My favorite thing about Ember is how it can take away the pointless choices, and nothing is more pointless then deciding where to put a thing, or what to call it.
+If you are new to Ember then this might seem like a lot to manage, but actually it is quite the opposite. All these things have meaning. They all have their own folder in my app, and just by naming them correctly Ember CLI magically wires them all together into a working application. My favorite thing about Ember is how it can take away the pointless choices, and nothing is more pointless then deciding where to put a thing, or what to call it.
 
-However it is not all rainbows and unicorns, there have always been these pesky things in real apps that don't fit neatly into one of Ember's buckets. These things usually need to be used from multiple parts of your app, think logging, analytics, sessions, authentication, etc. Up until [Ember 1.10](http://emberjs.com/blog/2015/02/07/ember-1-10-0-released.html) you had two basic approaches for these things.
+However, it is not all rainbows and unicorns. There have always been these pesky things in real apps that don't fit neatly into one of Ember's buckets. They usually need to be used from multiple parts of your app, think logging, analytics, sessions, authentication, etc. Up until [Ember 1.10](http://emberjs.com/blog/2015/02/07/ember-1-10-0-released.html) you had two basic approaches for these shared objects.
 
 ## Option One - Make it a Controller
 
@@ -48,11 +48,11 @@ export default Ember.Route.extend({
 });
 
 // controllers/posts/view.js
-// In a controller we can use the needs api to Ember know we need acess to the flash-message controller
+// In a controller we can use the needs api to Ember know we need access to the flash-message controller
 // It is very common to use an alias so you don't have to type controllers a million times
 export default Ember.Controller.extend({
   needs: ['flash-message'],
-  flashManager: Ember.computed.alais('controllers.flash-message'),
+  flashManager: Ember.computed.alias('controllers.flash-message'),
 
   actions: {
     upVote: function() {
@@ -67,16 +67,22 @@ export default Ember.Controller.extend({
 
 So beyond the obvious fact that controllers are [going away in Ember 2.0](https://github.com/emberjs/rfcs/pull/15) this approach has some drawbacks. First, you have two different APIs for getting the same thing depending on if your trying to get it from a controller or a route. Second, your limited to where you can access these objects. I may only need to use my flash manager in controllers and routes, but something like a logging service would be useful in other locations such as components.
 
-## Option Two - Dependency Injection with Initalizers
+## Option Two - Dependency Injection with Initializers
 
-If the thought of injecting things scares you, don't worry, it isn't bad. The idea here is that we want to loosen coupling. Imagine you need to log some messages. You could go to the store, buy some notebooks, and log everything you needed. This is tight coupling and is bad. Since you went out and bought your own notebooks, it would be a pain to get you to switch to twitter. We would have to find and replace all of your notebooks. 
+Dependency injection sounds scary, but it's not. It is just a mechanism to reduce coupling between different objects in your application. The example above using `needs` and `controllerFor` is one way Ember does dependency injection. If you have ever passed an object to another object's constructor you've done [constructor injection](http://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection). 
 
-Instead we could **inject** that **dependency**. Everytime you want to log a message you ask for something to log it to. Today we could give you a notebook, and tomorrow give you a fancy phablet that you could tweet that message on. Before we can inject our dependency we need to register it. We can do both in an initalizer. Initializers are just bits of code that run before your application is booted and let you set things up. Doing our logging service would look like this.
+Tight coupling makes code harder to maintain. Imagine you are an aspiring `photographer`, but every time you want to take a photo you buy a new `iPhone` to take a picture. This is analogous to creating a `new LoggingService()` every time you want to log something in your application.
+
+Besides being quickly broke, you the `photographer` are tightly coupled to `iPhone`. If we wanted to change the type of camera you use to 'DigitalSLR' we would need to follow you around and make sure we find every place you might take a picture and switch `iPhone` to `DigitalSLR`. This is analogous to having to change every place we use `new LoggingService()` in a big application.
+
+Now imagine that at the start of every day some magical person put a camera on your bed side table and you used that camera all day. Having the camera provided to you makes it easy to change `iPhone` to `DigitalSLR`. We have **injected** the camera **dependency**, and now our code is easier to maintain.
+
+In Ember that magical person that can change your `camera` in an `initializer`. Initializers are just bits of code that run before your application is booted and let you set things up. In our initializer we will `register` our dependency and then `inject` it into the types of objects where we want to use it. Coding our logging service this way would look like this:
 
 {% highlight javascript %}
 // utils/logger.js
 // Just a simple object that does some logging for us
-export default Ember.Object.extned({
+export default Ember.Object.extend({
 
   log(type, message) {
     // Do your sweet thing here
@@ -113,11 +119,11 @@ export default Ember.Controller.extend({
 });
 {% endhighlight %}
 
-There are lots of different knobs that can be dialed in here. For instance the default behavior is we get a sigleton logger, meaning that all the logger properties will be the same accross routes, controllers, and components. We could change this. For more details read the [api docs](http://emberjs.com/api/classes/Ember.Application.html#method_register). So what's wrong with this approach? Nothing in particular, I actually quite like it. There are a few things to be aware of however.
+There are lots of different knobs that can be dialed in here. For instance the default behavior is we get a singleton logger, meaning that all the logger properties will be the same across routes, controllers, and components. We could change this. For more details read the [api docs](http://emberjs.com/api/classes/Ember.Application.html#method_register). So what's wrong with this approach? Nothing in particular, I actually quite like it. There are a few things to be aware of however.
 
-Notice I didn't need to declare a `logger` property on my `PostsViewRoute`.  The `logger` property is injected onto all my routes whether I like it or not. I find it good practice to declare my injected properties with `null` (`logger: null`). I spent a long time once debugging an injected property conflicting with another property. By declaring it explictly I prevent myself from acciedently using that name for something else.
+Notice I didn't need to declare a `logger` property on my `PostsViewRoute`.  The `logger` property is injected onto all my routes whether I like it or not. I find it good practice to declare my injected properties with `null` (`logger: null`). I spent a long time once debugging an injected property conflicting with another property. By declaring it explicitly I prevent myself from accidentally using that name for something else.
 
-Another thing about this approach is it can be a bit tedious to limit your injections. Something like logging we want everywhere, but that's not always the case. You can [configure inject](http://emberjs.com/api/classes/Ember.Application.html#method_inject) a bunch, but if your lazy its easy just to give all the routes something that maybe only one or two of them need.
+Another thing about this approach is it can be a bit tedious to limit your injections. Something like logging we want everywhere, but that's not always the case. You can [configure inject](http://emberjs.com/api/classes/Ember.Application.html#method_inject) a bunch, but if your lazy it is easy just to give all the routes something that maybe only one or two of them need.
 
 ## Meet Ember.inject.service and Ember.inject.controller
 
@@ -163,8 +169,8 @@ export default Ember.Controller.extend({
 });
 {% endhighlight %}
 
-Sweet! We got to remove a whole file, the initializer is gone. Notice also that we moved `logger.js` from `utils` to `services`. By placing our services in the `services` folder Ember CLI will find them for us automatically. One less pointless choice. (the choice of `utils` was pointless. I just made that up in my own app.) I also like this better because I'm explicitly delcaring that I wan't the `logger` service available on `PostsViewRoute`. Other routes won't have a `logger` automatically. This also means that I don't have to worry about my injected property conflicting.
+Sweet! We got to remove a whole file, the initializer is gone. Notice also that we moved `logger.js` from `utils` to `services`. By placing our services in the `services` folder Ember CLI will find them for us automatically. One less pointless choice. (the choice of `utils` was pointless. I just made that up in my own app.) I also like this better because I'm explicitly delcaring that I want the `logger` service available on `PostsViewRoute`. Other routes won't have a `logger` automatically. This also means that I don't have to worry about my injected property conflicting.
 
 Now there are some rules for what can be injected where, but there is no public API for customizing that yet. For the most part you can inject services where you would think, including `routes`, `controllers`, `views`, and `components`. This isn't only for your own services. Addons can expose services and you can inject them into your apps objects. For example Ember Data has an [open PR](https://github.com/emberjs/data/pull/2820) to allow you to expose the `store` as a service.
 
-I'm a big fan of this API. It allowed me to delete a bunch of inializers in our app, and removed some silly choices from my day to day development. I think the Services API shows how Ember can constantly itterate on ideas without making me throw away all my code. Stability without Stagnation&trade;
+I'm a big fan of this API. It allowed me to delete a bunch of initializers in our app, and removed some silly choices from my day to day development. I think the Services API shows how Ember can constantly iterate on ideas without making me throw away all my code.
