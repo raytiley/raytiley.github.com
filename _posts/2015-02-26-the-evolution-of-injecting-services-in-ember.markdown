@@ -15,7 +15,7 @@ However, it is not all rainbows and unicorns. There have always been these pesky
 
 ## Option One - Make it a Controller
 
-This is a fine approach. Controller is one of those generic words like manager. When programming if your not in a creative mood just call it a Manager. Unless you happen to be writing an Ember app, then just call it a Controller. You can then get access to your plethora of controllers using `needs` or `controllerFor`. This might look like the following:
+This is a fine approach. Controller is one of those generic words like manager. When programming if you're not in a creative mood just call it a Manager. Unless you happen to be writing an Ember app, then just call it a Controller. You can then get access to your plethora of controllers using `needs` or `controllerFor`. This might look like the following:
 
 {% highlight javascript %}
 // controllers/flash-messages.js
@@ -65,7 +65,7 @@ export default Ember.Controller.extend({
 });
 {% endhighlight %}
 
-So beyond the obvious fact that controllers are [going away in Ember 2.0](https://github.com/emberjs/rfcs/pull/15) this approach has some drawbacks. First, you have two different APIs for getting the same thing depending on if your trying to get it from a controller or a route. Second, your limited to where you can access these objects. I may only need to use my flash manager in controllers and routes, but something like a logging service would be useful in other locations such as components.
+So beyond the obvious fact that controllers are [going away in Ember 2.0](https://github.com/emberjs/rfcs/pull/15) this approach has some drawbacks. First, you have two different APIs for getting the same thing depending on if you're trying to get it from a controller or a route. Second, you're limited to where you can access these objects. I may only need to use my flash manager in controllers and routes, but something like a logging service would be useful in other locations such as components.
 
 ## Option Two - Dependency Injection with Initializers
 
@@ -123,7 +123,7 @@ There are lots of different knobs that can be dialed in here. For instance the d
 
 Notice I didn't need to declare a `logger` property on my `PostsViewRoute`.  The `logger` property is injected onto all my routes whether I like it or not. I find it good practice to declare my injected properties with `null` (`logger: null`). I spent a long time once debugging an injected property conflicting with another property. By declaring it explicitly I prevent myself from accidentally using that name for something else.
 
-Another thing about this approach is it can be a bit tedious to limit your injections. Something like logging we want everywhere, but that's not always the case. You can [configure inject](http://emberjs.com/api/classes/Ember.Application.html#method_inject) a bunch, but if your lazy it is easy just to give all the routes something that maybe only one or two of them need.
+Another thing about this approach is it can be a bit tedious to limit your injections. Something like logging we want everywhere, but that's not always the case. You can [configure inject](http://emberjs.com/api/classes/Ember.Application.html#method_inject) a bunch, but if you're lazy it is easy just to give all the routes something that maybe only one or two of them need.
 
 ## Meet Ember.inject.service and Ember.inject.controller
 
