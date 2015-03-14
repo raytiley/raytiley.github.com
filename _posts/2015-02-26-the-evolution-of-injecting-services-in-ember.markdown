@@ -150,7 +150,7 @@ Granted this doesn't do a whole lot for us, we only got to remove one line of co
 {% highlight javascript %}
 // services/logger.js
 // Just a simple object that does some logging for us
-export default Ember.Object.extend({
+export default Ember.Service.extend({
 
   log(type, message) {
     // Do your sweet thing here
