@@ -7,7 +7,7 @@ categories: emberjs services inject
 
 <iframe
   width="178" height="24" style="border:0px"
-  src="https://mixonic.github.io/ember-community-versions/2015/02/21/the-evolution-of-injecting-services-in-ember">
+  src="https://mixonic.github.io/ember-community-versions/2015/02/26/the-evolution-of-injecting-services-in-ember">
 </iframe>
 
 I've been using Ember for about two years now. One of the things that initially impressed me is you don't need a lot of boilerplate code. At a bare minimum you need an `Ember.Application.create()` and an application template to get your app running. It won't do anything, but it is a perfectly functioning application. The first Ember app I wrote is still up on the Internet here: [http://raytiley-msse-static-scheduler.herokuapp.com](http://raytiley-msse-static-scheduler.herokuapp.com/#/taskSets).
