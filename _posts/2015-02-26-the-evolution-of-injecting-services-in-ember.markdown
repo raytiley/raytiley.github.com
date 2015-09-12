@@ -5,6 +5,11 @@ date:   2015-02-26 10:00:00 PM
 categories: emberjs services inject
 ---
 
+<iframe
+  width="178" height="24" style="border:0px"
+  src="https://mixonic.github.io/ember-community-versions/2015/02/21/the-evolution-of-injecting-services-in-ember">
+</iframe>
+
 I've been using Ember for about two years now. One of the things that initially impressed me is you don't need a lot of boilerplate code. At a bare minimum you need an `Ember.Application.create()` and an application template to get your app running. It won't do anything, but it is a perfectly functioning application. The first Ember app I wrote is still up on the Internet here: [http://raytiley-msse-static-scheduler.herokuapp.com](http://raytiley-msse-static-scheduler.herokuapp.com/#/taskSets).
 
 If you dig into the [source code](https://github.com/raytiley/RealTimeScheduler/tree/master/app/assets/javascripts/app) you'll see there are only `Routes`, `Models`, and `Controllers`. Alas, things were simpler back then. The app I develop today has `Mixins`, `Transforms`, `Helpers`, `Views`, `Adapters`, `Serializers`, and I think we just passed fifty `Components`.
@@ -69,7 +74,7 @@ So beyond the obvious fact that controllers are [going away in Ember 2.0](https:
 
 ## Option Two - Dependency Injection with Initializers
 
-Dependency injection sounds scary, but it's not. It is just a mechanism to reduce coupling between different objects in your application. The example above using `needs` and `controllerFor` is one way Ember does dependency injection. If you have ever passed an object to another object's constructor you've done [constructor injection](http://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection). 
+Dependency injection sounds scary, but it's not. It is just a mechanism to reduce coupling between different objects in your application. The example above using `needs` and `controllerFor` is one way Ember does dependency injection. If you have ever passed an object to another object's constructor you've done [constructor injection](http://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection).
 
 Tight coupling makes code harder to maintain. Imagine you are an aspiring `photographer`, but every time you want to take a photo you buy a new `iPhone` to take a picture. This is analogous to creating a `new LoggingService()` every time you want to log something in your application.
 
@@ -100,7 +105,7 @@ export default {
   initialize: function(container, application) {
     // register our logger
     application.register('logger:main', Logger);
-    
+
     // inject our logger so it is availble in controllers, routes, and components
     application.inject('controller', 'logger', 'logger:main');
     application.inject('route', 'logger', 'logger:main');

@@ -5,6 +5,11 @@ date:   2015-02-21 2:30:00 PM
 categories: emberjs components helpers subexpressions handlebars
 ---
 
+<iframe
+  width="178" height="24" style="border:0px"
+  src="https://mixonic.github.io/ember-community-versions/2015/02/21/handlebars-sub-expresions-aka-nested-helpers">
+</iframe>
+
 If you haven't read my [last post](/posts/using-the-component-helper/) go read it now. The TL;DR; is that we are trying render a component dynamically based on what we are rendering, and the current browser width. The `component` helper got us most of the way there, but we are still relying on the model to have the name of the component to render.
 
 My initial idea was to make own helper, like the `component` helper, that could take my crazy responsive ideas and pick the best component available to render. So I screamed at twitter...
