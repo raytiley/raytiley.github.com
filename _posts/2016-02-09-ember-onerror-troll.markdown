@@ -19,7 +19,7 @@ if (Ember.testing !== true) {
 
 ## The Symptoms
 
-I've recently started working on a different project at my company. It is an Ember app that was started after the project I normally work on (If you wanna here the full story come here me talk at [EmberConf](http://emberconf.com/speakers.html#ray-tiley)). Recently me and some of the other members of my team have noticed a random test failure. Once it starts failing it continues to fail, even after refreshing the browser. Looking at the test more closely we all realize that the test is obviously broken and so we fix it and move on. We currently have three different topic branches with this random test fixed. The really weird part is this test never fails on our Continuous Integration server.
+I've recently started working on a different project at my company. It is an Ember app that was started after the project I normally work on (If you wanna here the full story come here me talk at [EmberConf](http://emberconf.com/speakers.html#ray-tiley)). Recently, some of the my team members and I have noticed a random test failure. Once it starts failing it continues to fail, even after refreshing the browser. Looking at the test more closely we all realize that the test is obviously broken and so we fix it and move on. We currently have three different topic branches with this random test fixed. The really weird part is this test never fails on our Continuous Integration server.
 
 Finally this phantom failure bugged me enough that I decided to dig in. Poking around for a bit I was finally able to find a repeatable pattern, but I still didn't understand WTF was going on.
 
@@ -47,7 +47,7 @@ This is where the first breakthrough was made. Turns out that QUnit uses `Sessio
 
 I now had a solid explanation for why the test would always fail after it failed the first time. One of the tests in our suite was changing the test environment so that the broken test could pass. If I ran the test in isolation it would fail, because the other test that was changing the environment hadn't run. QUnit, seeing this failure, would now run the test first, before any tests that could alter the environment.
 
-My next breakthrough came from good old `Console`. Keeping the console open during the full test suite I noticed that there were errors being logged and the messages were the same as when the test should of failed. A useful tip is that you can click the links of the filename / line numbers in console messages to navigate to source code where that message was logged.
+My next breakthrough came from good old `Console`. Keeping the console open during the full test suite I noticed that there were errors being logged and the messages were the same as when the test should have failed. A useful tip is that you can click the links of the filename / line numbers in console messages to navigate to source code where that message was logged.
 
 ![Console Links](/images/console.png)
 
