@@ -59,9 +59,9 @@ Using the breakpoint it was pretty easy to see where the error was getting logge
 
 ## Resolution
 
-Once I saw `onError` in backburner I slapped my forehead and searched my project for `Ember.onerror`. What I found was an `instance-iniatalizer` that was being used to setup error tracking. If you haven't heard of `Ember.onerror` before you can read about it [here](http://emberjs.com/api/#event_onerror). It allows you to assign a function that gets called for any un-handled errors, including any exceptions thrown in the Run Loop. It's super useful for error tracking, which is why we were overriding it in our instance-iniatalizer.
+Once I saw `onError` in backburner I slapped my forehead and searched my project for `Ember.onerror`. What I found was an `instance-initializer` that was being used to setup error tracking. If you haven't heard of `Ember.onerror` before you can read about it [here](http://emberjs.com/api/#event_onerror). It allows you to assign a function that gets called for any un-handled errors, including any exceptions thrown in the Run Loop. It's super useful for error tracking, which is why we were overriding it in our instance-initializer.
 
-The problem, if you haven't already guessed, is it is a global handler, and doesn't get reset in between tests. Once you assign a function to `Ember.onerror` that function will always get used to handle errors until the global `Ember` object is reassigned (when you refresh the browser). Since `instance-iniatalizer`s only get run for acceptance tests, our `Ember.onerror` only got assigned if we ran the full test suite. Because our acceptance tests ran before the the test in question, the error would get silently dropped and the test would pass. When we ran the test in isolation `Ember.onerror` was not assigned, the error would not be dropped, and the test would fail. At this point `Qunit` would re-order the tests so the failing test would always execute before the acceptance tests and keep on failing.
+The problem, if you haven't already guessed, is it is a global handler, and doesn't get reset in between tests. Once you assign a function to `Ember.onerror` that function will always get used to handle errors until the global `Ember` object is reassigned (when you refresh the browser). Since `instance-initializer`s only get run for acceptance tests, our `Ember.onerror` only got assigned if we ran the full test suite. Because our acceptance tests ran before the the test in question, the error would get silently dropped and the test would pass. When we ran the test in isolation `Ember.onerror` was not assigned, the error would not be dropped, and the test would fail. At this point `Qunit` would re-order the tests so the failing test would always execute before the acceptance tests and keep on failing.
 
 Fixing the issue was really simple. Only assign to `Ember.onerror` if we aren't testing.
 
@@ -77,7 +77,7 @@ To see an example of how `Ember.onerror` can capture your errors and do things y
 
 ---
 
-It is pretty much the same bug I spent my day today cursing. Inside an action we were trying to call a function that is `undefined`. Instead of logging anything to the console, it will instead give you a sweet `alert` message. Imagine instead if the `alert` was logging to a disabled error tracking service. The error would be swallowed an your test would pass, even though it should really fail due to an un-handeled error.
+It is pretty much the same bug I spent my day today cursing. Inside an action we were trying to call a function that is `undefined`. Instead of logging anything to the console, it will instead give you a sweet `alert` message. Imagine instead if the `alert` was logging to a disabled error tracking service. The error would be swallowed and your test would pass, even though it should really fail due to an un-handeled error.
 
 ## Takeaways
 
