@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "Getting trolled by Ember.onerror"
-date:   2016-02-09 10:00:00 PM
-categories: emberjs testing onerror
+date:   2016-02-09 22:00:00
+tags: ['post', 'emberjs', 'testing', 'onerror']
 ---
 
 I lost most of my day debugging a random test failure that we would sometimes see in development, but never on our CI server. I can only hope that this post will save some poor soul from the hours of cursing at @rwjblue in slack that I experienced today.

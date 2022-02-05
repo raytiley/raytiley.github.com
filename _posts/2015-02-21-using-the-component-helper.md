@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "Using the Component Helper"
-date:   2015-02-21 2:25:00 PM
-categories: emberjs components helper
+date:   2015-02-21 14:25:00
+tags: ['post', 'emberjs', 'components', 'helper']
 ---
 
 <iframe

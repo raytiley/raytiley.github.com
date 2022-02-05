@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "The Evolution of Injecting Services in Ember"
-date:   2015-02-26 10:00:00 PM
-categories: emberjs services inject
+date:   2015-02-26 22:00:00
+tags: ['post', 'emberjs', 'services', 'inject']
 ---
 
 <iframe
